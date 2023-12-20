@@ -10,5 +10,8 @@
         public const string CustomerRole = "Customer";
 
         public const string EmailAdmin = "admin@gmail.com";
+
+        public const string Success = "Success";
+        public const string Error = "Error";
     }
 }

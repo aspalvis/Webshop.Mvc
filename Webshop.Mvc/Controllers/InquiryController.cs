@@ -52,7 +52,7 @@ namespace Webshop.Mvc.Controllers
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             HttpContext.Session.Set(WC.SessionInquiryId, InquiryVM.InquiryHeader.Id);
 
-            return RedirectToAction(nameof(Index), GetControllerName(nameof(CartController)));
+            return RedirectToActionSuccess(nameof(Index), ExtractControllerName(nameof(CartController)));
         }
 
         [HttpPost]
@@ -66,7 +66,7 @@ namespace Webshop.Mvc.Controllers
 
             _inquiryHeaderRepository.Save();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
 
         #region API CALLS  

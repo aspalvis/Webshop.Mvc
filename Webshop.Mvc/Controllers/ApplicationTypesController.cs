@@ -36,7 +36,7 @@ namespace Webshop.Mvc.Controllers
         {
             _applicationTypeRepository.Add(applicationType);
             _applicationTypeRepository.Save();
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
 
         // GET: ApplicationTypes/Edit
@@ -64,7 +64,7 @@ namespace Webshop.Mvc.Controllers
         {
             _applicationTypeRepository.Update(applicationType);
             _applicationTypeRepository.Save();
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
 
         // GET: ApplicationTypes/Delete
@@ -105,7 +105,7 @@ namespace Webshop.Mvc.Controllers
             _applicationTypeRepository.Delete(applcationType);
             _applicationTypeRepository.Save();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
 
         private bool ApplicationTypeExists(int id)

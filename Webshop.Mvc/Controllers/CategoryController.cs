@@ -22,6 +22,7 @@ namespace Webshop.Mvc.Controllers
             IEnumerable<Category> categories = _categoryRepository.GetAll(isTracking: false);
             return View(categories);
         }
+
         public IActionResult Create()
         {
             return View();
@@ -35,9 +36,11 @@ namespace Webshop.Mvc.Controllers
             {
                 _categoryRepository.Add(category);
                 _categoryRepository.Save();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToActionSuccess(nameof(Index));
             }
-            return View(category);
+
+            return ViewWithError(model: category);
         }
 
         public IActionResult Edit(int? id)
@@ -66,10 +69,10 @@ namespace Webshop.Mvc.Controllers
                 _categoryRepository.Update(category);
                 _categoryRepository.Save();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToActionSuccess(nameof(Index));
             }
 
-            return View(category);
+            return ViewWithError(model: category);
         }
 
         public IActionResult Delete(int? id)
@@ -100,7 +103,7 @@ namespace Webshop.Mvc.Controllers
                 _categoryRepository.Delete(category);
                 _categoryRepository.Save();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToActionSuccess(nameof(Index));
             }
 
             return NotFound();

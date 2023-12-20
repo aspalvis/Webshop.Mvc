@@ -115,7 +115,7 @@ namespace Webshop.Mvc.Controllers
 
                 _productRepository.Save();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToActionSuccess(nameof(Index));
             }
             else
             {
@@ -146,7 +146,7 @@ namespace Webshop.Mvc.Controllers
             _productRepository.Delete(product);
             _productRepository.Save();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Webshop.Mvc.Controllers
         {
             List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
             HttpContext.Session.Set(WC.SessionCart, items.Where(x => x.ProductId != id).ToList());
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
 
         [HttpPost, ActionName("Details")]
@@ -68,7 +68,7 @@ namespace Webshop.Mvc.Controllers
 
             HttpContext.Session.Set(WC.SessionCart, items);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
         public IActionResult Privacy()
         {

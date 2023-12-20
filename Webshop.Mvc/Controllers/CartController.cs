@@ -112,7 +112,7 @@ namespace Webshop.Mvc.Controllers
 
             var inquiryHeader = new InquiryHeader()
             {
-                ApplicationUserId = GetClaimByType(ClaimTypes.NameIdentifier).Value,
+                ApplicationUserId = RetrieveClaimByType(ClaimTypes.NameIdentifier).Value,
                 FullName = productUserVM.ApplicationUser.FullName,
                 Email = productUserVM.ApplicationUser.Email,
                 PhoneNumber = productUserVM.ApplicationUser.PhoneNumber,
@@ -134,7 +134,7 @@ namespace Webshop.Mvc.Controllers
 
             _inquiryDetailsRepository.Save();
 
-            return RedirectToAction(nameof(InquiryConfirmation));
+            return RedirectToActionSuccess(nameof(InquiryConfirmation));
         }
 
         public IActionResult InquiryConfirmation()
@@ -149,7 +149,7 @@ namespace Webshop.Mvc.Controllers
         {
             List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
             HttpContext.Session.Set(WC.SessionCart, items.Where(x => x.ProductId != id).ToList());
-            return RedirectToAction(nameof(Index));
+            return RedirectToActionSuccess(nameof(Index));
         }
     }
 }
