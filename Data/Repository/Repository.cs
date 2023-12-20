@@ -24,6 +24,8 @@ namespace DataAccess.Repository
 
         public void Delete(T item) => dbSet.Remove(item);
 
+        public void DeleteRange(IEnumerable<T> items) => dbSet.RemoveRange(items);
+
         public T Find(int id) => dbSet.Find(id);
 
         public T FirstOrDefault(
@@ -58,7 +60,8 @@ namespace DataAccess.Repository
         public List<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string includeProperties = null, bool isTracking = true
+            string includeProperties = null,
+            bool isTracking = true
         )
         {
             IQueryable<T> query = dbSet;

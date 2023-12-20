@@ -19,5 +19,9 @@ namespace DataAccess.Data
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
+        public DbSet<InquiryDetails> InquiryDetails { get; set; }
+
+        public DbSet<InquiryHeader> InquiryHeader { get; set; }
+
     }
 }

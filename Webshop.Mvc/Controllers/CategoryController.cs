@@ -8,7 +8,7 @@ using Utility;
 namespace Webshop.Mvc.Controllers
 {
     [Authorize(Roles = WC.AdminRole)]
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         private readonly ICategoryRepository _categoryRepository;
 

@@ -49,6 +49,8 @@ namespace Webshop.Mvc
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
+            services.AddScoped<IInquiryDetailsRepository, InquiryDetailsRepository>();
 
             services.AddControllersWithViews();
         }

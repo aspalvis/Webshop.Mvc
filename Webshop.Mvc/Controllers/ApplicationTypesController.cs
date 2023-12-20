@@ -8,7 +8,7 @@ using Utility;
 namespace Webshop.Mvc.Controllers
 {
     [Authorize(Roles = WC.AdminRole)]
-    public class ApplicationTypesController : Controller
+    public class ApplicationTypesController : BaseController
     {
         private readonly IApplicationTypeRepository _applicationTypeRepository;
 

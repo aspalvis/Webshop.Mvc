@@ -1,12 +1,11 @@
-﻿
-using DataAccess.Data;
-using DataAccess.Repository.IRepository;
+﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,23 +17,27 @@ using Utility;
 namespace Webshop.Mvc.Controllers
 {
     [Authorize(Roles = WC.AdminRole)]
-    public class CartController : Controller
+    public class CartController : BaseController
     {
 
         private readonly IProductRepository _productRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
         private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IInquiryHeaderRepository _inquiryHeaderRepository;
+        private readonly IInquiryDetailsRepository _inquiryDetailsRepository;
 
         [BindProperty]
         public ProductUserVM ProductUserVM { get; set; }
 
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IProductRepository productRepository, IApplicationUserRepository applicationUserRepository)
+        public CartController(IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IProductRepository productRepository, IApplicationUserRepository applicationUserRepository, IInquiryHeaderRepository inquiryHeaderRepository, IInquiryDetailsRepository inquiryDetailsRepository)
         {
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
             _productRepository = productRepository;
             _applicationUserRepository = applicationUserRepository;
+            _inquiryHeaderRepository = inquiryHeaderRepository;
+            _inquiryDetailsRepository = inquiryDetailsRepository;
         }
 
         public IActionResult Index()
@@ -106,6 +109,30 @@ namespace Webshop.Mvc.Controllers
                 );
 
             await _emailSender.SendEmailAsync(WC.EmailAdmin, "New Inquiry", messageBody);
+
+            var inquiryHeader = new InquiryHeader()
+            {
+                ApplicationUserId = GetClaimByType(ClaimTypes.NameIdentifier).Value,
+                FullName = productUserVM.ApplicationUser.FullName,
+                Email = productUserVM.ApplicationUser.Email,
+                PhoneNumber = productUserVM.ApplicationUser.PhoneNumber,
+                InquiryDate = DateTime.Now
+            };
+
+            _inquiryHeaderRepository.Add(inquiryHeader);
+            _inquiryHeaderRepository.Save();
+
+            foreach (var item in productUserVM.ProductList)
+            {
+                InquiryDetails inquiryDetails = new()
+                {
+                    InquiryHeaderId = inquiryHeader.Id,
+                    ProductId = item.Id
+                };
+                _inquiryDetailsRepository.Add(inquiryDetails);
+            }
+
+            _inquiryDetailsRepository.Save();
 
             return RedirectToAction(nameof(InquiryConfirmation));
         }

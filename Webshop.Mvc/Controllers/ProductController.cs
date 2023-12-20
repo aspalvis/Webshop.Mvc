@@ -12,7 +12,7 @@ using Utility;
 
 namespace Webshop.Mvc.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
         private readonly IProductRepository _productRepository;
 

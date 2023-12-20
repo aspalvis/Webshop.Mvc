@@ -26,6 +26,8 @@ namespace DataAccess.Repository.IRepository
 
         void Delete(T item);
 
+        void DeleteRange(IEnumerable<T> items);
+
         void Save();
     }
 }
