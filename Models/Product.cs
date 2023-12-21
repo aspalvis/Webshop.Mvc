@@ -6,6 +6,11 @@ namespace Models
 {
     public class Product
     {
+        public Product()
+        {
+            TempSqFt = 1;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -37,5 +42,12 @@ namespace Models
 
         [ForeignKey(nameof(ApplicationTypeId))]
         public virtual ApplicationType ApplicationType { get; set; }
+
+
+        // Not mapped properties
+
+        [NotMapped]
+        [Range(1, 10000)]
+        public int TempSqFt { get; set; }
     }
 }

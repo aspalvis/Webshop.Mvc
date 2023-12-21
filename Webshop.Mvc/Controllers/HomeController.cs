@@ -49,6 +49,27 @@ namespace Webshop.Mvc.Controllers
             return View(vm);
         }
 
+        [HttpPost, ActionName("Details")]
+        public IActionResult DetailsPost(Product product)
+        {
+            List<ShoppingCart> cartItems = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
+
+            if (!cartItems.Any(item => item.ProductId == product.Id))
+            {
+                ShoppingCart newCartItem = new ShoppingCart
+                {
+                    ProductId = product.Id,
+                    SqFt = product.TempSqFt
+                };
+
+                cartItems.Add(newCartItem);
+            }
+
+            HttpContext.Session.Set(WC.SessionCart, cartItems);
+
+            return RedirectToActionSuccess(nameof(Index));
+        }
+
         public IActionResult RemoveFromCart(int id)
         {
             List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
@@ -56,20 +77,6 @@ namespace Webshop.Mvc.Controllers
             return RedirectToActionSuccess(nameof(Index));
         }
 
-        [HttpPost, ActionName("Details")]
-        public IActionResult DetailsPost(Product product)
-        {
-            List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
-
-            if (!items.Any(x => x.ProductId == product.Id))
-            {
-                items.Add(new ShoppingCart() { ProductId = product.Id });
-            }
-
-            HttpContext.Session.Set(WC.SessionCart, items);
-
-            return RedirectToActionSuccess(nameof(Index));
-        }
         public IActionResult Privacy()
         {
             return View();

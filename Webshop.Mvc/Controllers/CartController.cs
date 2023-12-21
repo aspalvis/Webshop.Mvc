@@ -44,9 +44,18 @@ namespace Webshop.Mvc.Controllers
         {
             IEnumerable<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
 
-            var prodInCart = items.Select(x => x.ProductId).ToList();
+            var productIds = items.Select(u => u.ProductId).ToList();
 
-            var prodList = _productRepository.GetAll(x => prodInCart.Contains(x.Id), isTracking: false);
+            var prodList = _productRepository.GetAll(x => productIds.Contains(x.Id), isTracking: false);
+
+            foreach (var cart in items)
+            {
+                var productTemp = prodList.FirstOrDefault(x => x.Id.Equals(cart.ProductId));
+                if (productTemp != null)
+                {
+                    productTemp.TempSqFt = cart.SqFt;
+                }
+            }
 
             return View(prodList);
         }
@@ -149,6 +158,22 @@ namespace Webshop.Mvc.Controllers
         {
             List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
             HttpContext.Session.Set(WC.SessionCart, items.Where(x => x.ProductId != id).ToList());
+            return RedirectToActionSuccess(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(IList<Product> products)
+        {
+            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+
+            foreach (var product in products)
+            {
+                shoppingCarts.Add(new ShoppingCart { ProductId = product.Id, SqFt = product.TempSqFt });
+            }
+
+            HttpContext.Session.Set(WC.SessionCart, shoppingCarts);
+
             return RedirectToActionSuccess(nameof(Index));
         }
     }
