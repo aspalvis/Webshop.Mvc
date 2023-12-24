@@ -16,7 +16,7 @@ using Utility;
 
 namespace Webshop.Mvc.Controllers
 {
-    [Authorize(Roles = WC.AdminRole)]
+    [Authorize]
     public class CartController : BaseController
     {
 
@@ -63,16 +63,48 @@ namespace Webshop.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Index")]
-        public IActionResult IndexPost()
+        public IActionResult IndexPost(IList<Product> products)
         {
+            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+
+            foreach (var product in products)
+            {
+                shoppingCarts.Add(new ShoppingCart { ProductId = product.Id, SqFt = product.TempSqFt });
+            }
+
+            HttpContext.Session.Set(WC.SessionCart, shoppingCarts);
+
             return RedirectToAction(nameof(Summary));
         }
 
         public IActionResult Summary()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            Claim claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            string userId = User.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser appUser;
+            if (User.IsInRole(WC.AdminRole))
+            {
+                if (HttpContext.Session.Get<int>(WC.SessionInquiryId) != 0)
+                {
+                    var inquiryHeader = _inquiryHeaderRepository
+                        .FirstOrDefault(x => x.Id.Equals(HttpContext.Session.Get<int>(WC.SessionInquiryId)),
+                            isTracking: false);
+
+                    appUser = new ApplicationUser()
+                    {
+                        Email = inquiryHeader.Email,
+                        FullName = inquiryHeader.FullName,
+                        PhoneNumber = inquiryHeader.PhoneNumber,
+                    };
+                }
+                else
+                {
+                    appUser = new ApplicationUser();
+                }
+            }
+            else
+            {
+                Claim claimsIdentity = base.RetrieveClaimByType(ClaimTypes.NameIdentifier);
+                appUser = _applicationUserRepository.FirstOrDefault(x => x.Id.Equals(claimsIdentity.Value), isTracking: false);
+            }
 
             IEnumerable<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
 
@@ -82,9 +114,15 @@ namespace Webshop.Mvc.Controllers
 
             ProductUserVM = new ProductUserVM()
             {
-                ApplicationUser = _applicationUserRepository.FirstOrDefault(x => x.Id.Equals(claim.Value), isTracking: false),
-                ProductList = prodList,
+                ApplicationUser = appUser,
             };
+
+            foreach (var item in items)
+            {
+                Product productTemp = _productRepository.FirstOrDefault(x => x.Id.Equals(item.ProductId));
+                productTemp.TempSqFt = item.SqFt;
+                ProductUserVM.ProductList.Add(productTemp);
+            }
 
             return View(ProductUserVM);
         }

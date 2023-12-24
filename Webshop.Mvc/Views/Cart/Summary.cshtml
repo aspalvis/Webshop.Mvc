@@ -1,8 +1,11 @@
-﻿@model ProductUserVM
+﻿@using Utility
+@model ProductUserVM
 @{
     ViewData["Title"] = "Cart";
     ViewData["SubTitle"] = "Summary";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var orderTotal = 0.00;
 }
 <form method="post">
     <br />
@@ -54,6 +57,45 @@
                                         <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
                                     </div>
                                 </div>
+                                @if (User.IsInRole(WC.AdminRole))
+                                {
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Street address</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.StreetAddress" required type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.StreetAddress" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.City" required type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>State</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.State" required type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.State" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Postal code</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.PostalCode" required type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                             <div class="col-12 col-lg-5 row">
                                 <div class="col-12">
@@ -68,8 +110,29 @@
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductList[i].Name</h6>
-                                                    <small class="text-muted">Price per Sqft: @Model.ProductList[i].Price.ToString("c")</small>
+                                                    @if (User.IsInRole(WC.AdminRole))
+                                                    {
+                                                        <small class="text-muted">Sqft: @Model.ProductList[i].TempSqFt</small>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <small class="text-muted">Price per Sqft: @Model.ProductList[i].Price.ToString("c")</small>
+                                                    }
                                                 </div>
+                                                @if (User.IsInRole(WC.AdminRole))
+                                                {
+                                                    <small class="text-muted">$@(Model.ProductList[i].Price * Model.ProductList[i].TempSqFt)</small>
+                                                }
+                                            </li>
+
+                                            orderTotal += Model.ProductList[i].Price * Model.ProductList[i].TempSqFt;
+                                        }
+                                        @if (User.IsInRole(WC.AdminRole))
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                                <small class="text-info"> Total (USD)</small>
+                                                <strong class="text-info">$@orderTotal</strong>
                                             </li>
                                         }
                                     </ul>
@@ -81,7 +144,15 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
-                            <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                            @if (User.IsInRole(WC.AdminRole))
+                            {
+                                <button type="submit" class="btn btn-primary form-control">Submit Order</button>
+
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                            }
                         </div>
                     </div>
                 </div>
