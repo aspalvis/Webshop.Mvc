@@ -1,6 +1,4 @@
 using DataAccess.Data;
-using DataAccess.Repository;
-using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -45,12 +43,7 @@ namespace Webshop.Mvc
                 Options.Cookie.IsEssential = true;
             });
 
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
-            services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-            services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
-            services.AddScoped<IInquiryDetailsRepository, InquiryDetailsRepository>();
+            services.AddRespositories();
 
             services.AddControllersWithViews();
         }
