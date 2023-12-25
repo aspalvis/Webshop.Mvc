@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Utility;
 using Utility.BrainTree;
+using Webshop.Mvc.Extensions;
 
 namespace Webshop.Mvc
 {
@@ -48,6 +49,8 @@ namespace Webshop.Mvc
             services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
             services.AddRespositories();
+
+            services.AddFacebookAuth(Configuration);
 
             services.AddControllersWithViews();
         }

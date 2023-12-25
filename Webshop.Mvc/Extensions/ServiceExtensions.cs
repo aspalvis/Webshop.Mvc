@@ -1,8 +1,9 @@
 ﻿using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Utility
+namespace Webshop.Mvc.Extensions
 {
     public static class ServiceExtensions
     {
@@ -16,6 +17,15 @@ namespace Utility
             services.AddScoped<IInquiryDetailsRepository, InquiryDetailsRepository>();
             services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
             services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
+        }
+
+        public static void AddFacebookAuth(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = configuration["Facebook:AppId"];
+                options.AppSecret = configuration["Facebook:AppSecret"];
+            });
         }
     }
 }
