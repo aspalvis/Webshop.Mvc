@@ -93,7 +93,7 @@ namespace Webshop.Mvc.Controllers
             return RedirectToAction(nameof(Summary));
         }
 
-        public IActionResult Summary()
+        public async Task<IActionResult> Summary()
         {
             ApplicationUser appUser;
             if (User.IsInRole(WC.AdminRole))
@@ -117,7 +117,7 @@ namespace Webshop.Mvc.Controllers
                 }
 
                 var gateway = _brainTreeGate.GetGateWay();
-                var clientToken = gateway.ClientToken.Generate();
+                var clientToken = await gateway.ClientToken.GenerateAsync();
                 ViewBag.ClientToken = clientToken;
             }
             else

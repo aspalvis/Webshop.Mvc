@@ -180,24 +180,28 @@
     <script src="https://js.braintreegateway.com/web/dropin/1.41.0/js/dropin.min.js"></script>
     <script>
         var client_token = "@ViewBag.ClientToken";
-        const form = document.getElementById('payment-form');
 
-        braintree.dropin.create({
-            authorization: client_token,
-            container: '#dropin-container'
-        }, (error, dropinInstance) => {
-            if (error) console.error(error);
+        if (client_token) {
+            const form = document.getElementById('payment-form');
 
-            form.addEventListener('submit', event => {
-                event.preventDefault();
+            braintree.dropin.create({
+                authorization: client_token,
+                container: '#dropin-container'
+            }, (error, dropinInstance) => {
+                if (error) console.error(error);
 
-                dropinInstance.requestPaymentMethod((error, payload) => {
-                    if (error) console.error(error);
+                form.addEventListener('submit', event => {
+                    event.preventDefault();
 
-                    document.getElementById('nonce').value = payload.nonce;
-                    form.submit();
+                    dropinInstance.requestPaymentMethod((error, payload) => {
+                        if (error) console.error(error);
+
+                        document.getElementById('nonce').value = payload.nonce;
+                        form.submit();
+                    });
                 });
             });
-        });
+        }
+
     </script>
 }
