@@ -5,6 +5,7 @@
 
 # Custom items
 Webshop.MVC/wwwroot/images/product/
+appsettings.json
 # User-specific files
 *.rsuser
 *.suo
@@ -363,3 +364,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Webshop.Mvc/appsettings.json
