@@ -1,11 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Inquiry Confirmation";
+﻿@model OrderHeader
+
+@{
+    ViewData["Title"] = Model != null ? "Order Created" : "Inquiry Confirmation";
     ViewData["SubTitle"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
-    <h1 class="text-info">@ViewData["Title"]</h1>
-    <p>We have received your inquiry and someone from our team will contact you shortly!</p>
+    @if (Model != null)
+    {
+        <h1 class="text-info">@ViewData["Title"]</h1>
+        <p>Order #@Model.Id has beed created successfully!</p>
+    }
+    else
+    {
+        <h1 class="text-info">@ViewData["Title"]</h1>
+        <p>We have received your inquiry and someone from our team will contact you shortly!</p>
+    }
+
     <img src="/images/patio.jpg" width="80%" />
 </div>

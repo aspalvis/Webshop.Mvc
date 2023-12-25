@@ -233,11 +233,13 @@ namespace Webshop.Mvc.Controllers
             }
         }
 
-        public IActionResult InquiryConfirmation()
+        public IActionResult InquiryConfirmation(int id = 0)
         {
+            OrderHeader orderHeader = _orderHeaderRepository.FirstOrDefault(x => x.Id.Equals(id), isTracking: false);
+
             HttpContext.Session.Clear();
 
-            return View();
+            return View(orderHeader);
         }
 
 
