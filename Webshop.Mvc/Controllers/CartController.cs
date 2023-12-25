@@ -1,6 +1,8 @@
-﻿using DataAccess.Repository.IRepository;
+﻿using Braintree;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -148,7 +150,7 @@ namespace Webshop.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Summary))]
-        public async Task<IActionResult> SummaryPost(ProductUserVM productUserVM)
+        public async Task<IActionResult> SummaryPost(IFormCollection collection, ProductUserVM productUserVM)
         {
             if (User.IsInRole(WC.AdminRole))
             {
@@ -184,6 +186,35 @@ namespace Webshop.Mvc.Controllers
                 }
 
                 _orderDetailsRepository.Save();
+
+                string nonceFromTheClient = collection["payment_method_nonce"];
+
+                var request = new TransactionRequest
+                {
+                    Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal),
+                    PaymentMethodNonce = nonceFromTheClient,
+                    OrderId = orderHeader.Id.ToString(),
+                    Options = new TransactionOptionsRequest
+                    {
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var gateway = _brainTreeGate.GetGateWay();
+
+                Result<Transaction> result = gateway.Transaction.Sale(request);
+
+                if (result.Target.ProcessorResponseText == "Approved")
+                {
+                    orderHeader.TransactionId = result.Target.Id;
+                    orderHeader.OrderStatus = WC.StatusApproved;
+                }
+                else
+                {
+                    orderHeader.OrderStatus = WC.StatusCancelled;
+                }
+
+                _orderHeaderRepository.Save();
 
                 return RedirectToActionSuccess(nameof(InquiryConfirmation), routeValues: new { id = orderHeader.Id });
 
@@ -262,6 +293,13 @@ namespace Webshop.Mvc.Controllers
             List<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
             HttpContext.Session.Set(WC.SessionCart, items.Where(x => x.ProductId != id).ToList());
             return RedirectToActionSuccess(nameof(Index));
+        }
+
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToActionSuccess(nameof(Index), ExtractControllerName(nameof(HomeController)));
         }
 
         [HttpPost]
