@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Utility;
+using Utility.BrainTree;
 
 namespace Webshop.Mvc.Controllers
 {
@@ -28,11 +29,19 @@ namespace Webshop.Mvc.Controllers
         private readonly IInquiryDetailsRepository _inquiryDetailsRepository;
         private readonly IOrderDetailsRepository _orderDetailsRepository;
         private readonly IOrderHeaderRepository _orderHeaderRepository;
+        private readonly IBrainTreeGate _brainTreeGate;
 
         [BindProperty]
         public ProductUserVM ProductUserVM { get; set; }
 
-        public CartController(IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IProductRepository productRepository, IApplicationUserRepository applicationUserRepository, IInquiryHeaderRepository inquiryHeaderRepository, IInquiryDetailsRepository inquiryDetailsRepository, IOrderDetailsRepository orderDetailsRepository, IOrderHeaderRepository orderHeaderRepository)
+        public CartController(IWebHostEnvironment webHostEnvironment,
+            IEmailSender emailSender, IProductRepository productRepository,
+            IApplicationUserRepository applicationUserRepository,
+            IInquiryHeaderRepository inquiryHeaderRepository,
+            IInquiryDetailsRepository inquiryDetailsRepository,
+            IOrderDetailsRepository orderDetailsRepository,
+            IOrderHeaderRepository orderHeaderRepository,
+            IBrainTreeGate brainTreeGate)
         {
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
@@ -42,6 +51,7 @@ namespace Webshop.Mvc.Controllers
             _inquiryDetailsRepository = inquiryDetailsRepository;
             _orderDetailsRepository = orderDetailsRepository;
             _orderHeaderRepository = orderHeaderRepository;
+            _brainTreeGate = brainTreeGate;
         }
 
         public IActionResult Index()
@@ -103,6 +113,10 @@ namespace Webshop.Mvc.Controllers
                 {
                     appUser = new ApplicationUser();
                 }
+
+                var gateway = _brainTreeGate.GetGateWay();
+                var clientToken = gateway.ClientToken.Generate();
+                ViewBag.ClientToken = clientToken;
             }
             else
             {

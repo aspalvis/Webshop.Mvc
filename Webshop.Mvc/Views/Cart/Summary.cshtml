@@ -7,7 +7,7 @@
 
     var orderTotal = 0.00;
 }
-<form method="post">
+<form method="post" id="payment-form">
     <br />
     <div class="backgroundWhiteBorder">
         <div class="container">
@@ -139,6 +139,17 @@
                                         }
                                     </ul>
                                 </div>
+                                @if (User.IsInRole(WC.AdminRole))
+                                {
+                                    <div class="col-12">
+                                        <div class="wrapper">
+                                            <div class="checkout container">
+                                                <div id="dropin-container"></div>
+                                                <input type="hidden" id="nonce" name="payment_method_nonce" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -166,4 +177,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://js.braintreegateway.com/web/dropin/1.41.0/js/dropin.min.js"></script>
+    <script>
+        var client_token = "@ViewBag.ClientToken";
+        const form = document.getElementById('payment-form');
+
+        braintree.dropin.create({
+            authorization: client_token,
+            container: '#dropin-container'
+        }, (error, dropinInstance) => {
+            if (error) console.error(error);
+
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+
+                dropinInstance.requestPaymentMethod((error, payload) => {
+                    if (error) console.error(error);
+
+                    document.getElementById('nonce').value = payload.nonce;
+                    form.submit();
+                });
+            });
+        });
+    </script>
 }
