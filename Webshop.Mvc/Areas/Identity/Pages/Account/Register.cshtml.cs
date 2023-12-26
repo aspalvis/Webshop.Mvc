@@ -99,7 +99,9 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
                     PhoneNumber = Input.PhoneNumber,
                     FullName = Input.FullName
                 };
+
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
                     if (User.IsInRole(WC.AdminRole))
@@ -132,13 +134,14 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
                     {
                         if (User.IsInRole(WC.AdminRole))
                         {
-                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            TempData[WC.Success] = user.FullName + " has been registred";
+                            RedirectToAction("Index", "Home");
                         }
                         else
                         {
-                            return RedirectToAction("Index");
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
                         }
-                        return LocalRedirect(returnUrl);
                     }
                 }
                 foreach (IdentityError error in result.Errors)
