@@ -14,13 +14,10 @@ namespace Models
         [ForeignKey(nameof(CreatedByUserId))]
         public ApplicationUser CreatedBy { get; set; }
 
-        [Required]
         public DateTime? OrderDate { get; set; }
 
-        [Required]
         public DateTime? ShippingDate { get; set; }
 
-        [Required]
         public double FinalOrderTotal { get; set; }
 
         public string OrderStatus { get; set; }

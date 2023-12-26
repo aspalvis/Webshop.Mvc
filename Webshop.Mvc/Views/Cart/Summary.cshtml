@@ -192,13 +192,14 @@
 
                 form.addEventListener('submit', event => {
                     event.preventDefault();
+                    if (validateInput()) {
+                        dropinInstance.requestPaymentMethod((error, payload) => {
+                            if (error) console.error(error);
 
-                    dropinInstance.requestPaymentMethod((error, payload) => {
-                        if (error) console.error(error);
-
-                        document.getElementById('nonce').value = payload.nonce;
-                        form.submit();
-                    });
+                            document.getElementById('nonce').value = payload.nonce;
+                            form.submit();
+                        });
+                    }
                 });
             });
         }
