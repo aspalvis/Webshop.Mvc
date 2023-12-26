@@ -65,7 +65,12 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required]
+            [Display(Name = "Full name")]
             public string FullName { get; set; }
+
+            [Required]
+            [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
         }
 
