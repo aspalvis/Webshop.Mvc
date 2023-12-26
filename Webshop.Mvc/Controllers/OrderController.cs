@@ -1,6 +1,7 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models;
 using Models.ViewModels;
 using System.Linq;
 using Utility;
@@ -16,6 +17,9 @@ namespace Webshop.Mvc.Controllers
 
         [BindProperty]
         public OrderListVM OrderListVM { get; set; }
+
+        [BindProperty]
+        public OrderVM OrderVM { get; set; }
 
         public OrderController(
             IOrderDetailsRepository orderDetailsRepository,
@@ -44,6 +48,17 @@ namespace Webshop.Mvc.Controllers
                 })
             };
             return View(OrderListVM);
+        }
+
+        public IActionResult Details(int id)
+        {
+            OrderVM = new OrderVM()
+            {
+                OrderHeader = _orderHeaderRepository.FirstOrDefault(x => x.Id == id, isTracking: false),
+                OrderDetails = _orderDetailsRepository.GetAll(x => x.OrderHeaderId == id, includeProperties: nameof(Product), isTracking: false),
+            };
+
+            return View(OrderVM);
         }
     }
 }

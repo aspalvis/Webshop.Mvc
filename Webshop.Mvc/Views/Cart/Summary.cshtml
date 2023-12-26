@@ -159,12 +159,12 @@
                         <div class="col-12 col-md-5 offset-md-7">
                             @if (User.IsInRole(WC.AdminRole))
                             {
-                                <button type="submit" class="btn btn-primary form-control">Submit Order</button>
+                                <button type="submit" onclick="return validateInput()" class="btn btn-primary form-control">Submit Order</button>
 
                             }
                             else
                             {
-                                <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                                <button type="submit" onclick="return validateInput()" class="btn btn-primary form-control">Submit Inquiry</button>
                             }
                         </div>
                     </div>
@@ -201,6 +201,18 @@
                     });
                 });
             });
+        }
+
+        function validateInput(){
+            try {
+                var app_name = document.getElementById('ApplicationUser_FullName').value.blameOnEmpty("Full name");
+                var app_phone = document.getElementById('ApplicationUser_PhoneNumber').value.blameOnEmpty("Phone number");
+                var app_email = document.getElementById('ApplicationUser_Email').value.blameOnEmpty("Email");
+
+                return true;
+            } catch {
+                return false;
+            }
         }
 
     </script>
