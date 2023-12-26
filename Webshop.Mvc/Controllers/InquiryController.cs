@@ -25,9 +25,14 @@ namespace Webshop.Mvc.Controllers
             _inquiryDetailsRepository = inquiryDetailsRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string name = null, string email = null, string phone = null)
         {
-            return View();
+            return View(_inquiryHeaderRepository.GetAll(
+                    x => (string.IsNullOrEmpty(name) || x.FullName.ToLower().Contains(name.ToLower()))
+                      && (string.IsNullOrEmpty(email) || x.Email.ToLower().Contains(email.ToLower()))
+                      && (string.IsNullOrEmpty(phone) || x.PhoneNumber.ToLower().Contains(phone.ToLower())),
+                    isTracking: false
+                ));
         }
 
         public IActionResult Details(int id)

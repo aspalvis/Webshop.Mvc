@@ -51,7 +51,7 @@
                 <e-grid-column field="PhoneNumber" headerText="Phone number"  textAlign="Left"></e-grid-column>
                 <e-grid-column field="OrderStatus" headerText="Order status" textAlign="Left"></e-grid-column>
                 <e-grid-column field="OrderDate" headerText="Order date" autofit="true" customFormat="@(new { type="date", format="dd.MM.yyyy" })" textAlign="Left"></e-grid-column>
-                <e-grid-column field="Id" isPrimaryKey="true" headerText="" autofit="true" textAlign="Right"
+                <e-grid-column field="Id" isPrimaryKey="true" headerText="" autofit="true" textAlign="Right" allowSorting="false" allowFiltering="false"
                                template="<a href='Order/Details/${Id}' style='max-width:40px' class='btn btn-primary btn-sm'>
                                 <i class='fas fa-list'></i>
                               </a>">
