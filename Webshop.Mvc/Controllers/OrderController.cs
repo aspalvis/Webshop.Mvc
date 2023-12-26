@@ -1,6 +1,9 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.ViewModels;
+using System.Linq;
+using Utility;
 using Utility.BrainTree;
 
 namespace Webshop.Mvc.Controllers
@@ -12,7 +15,7 @@ namespace Webshop.Mvc.Controllers
         private readonly IBrainTreeGate _brainTreeGate;
 
         [BindProperty]
-        public ProductUserVM ProductUserVM { get; set; }
+        public OrderListVM OrderListVM { get; set; }
 
         public OrderController(
             IOrderDetailsRepository orderDetailsRepository,
@@ -25,6 +28,15 @@ namespace Webshop.Mvc.Controllers
         }
         public IActionResult Index()
         {
+            OrderListVM = new OrderListVM()
+            {
+                OrderHeaders = _orderHeaderRepository.GetAll(isTracking: false),
+                StatusList = WC.listStatus.ToList().Select(status => new SelectListItem
+                {
+                    Text = status,
+                    Value = status
+                })
+            };
             return View();
         }
     }
