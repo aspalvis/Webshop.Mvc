@@ -38,11 +38,11 @@ else
                         </div>
                         <div class="py-2 form-row row">
                             <div class="col-6">
-                                @Html.TextBoxFor(x => x.Input.Password, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(x => x.Input.Password) })
+                                @Html.TextBoxFor(x => x.Input.Password, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(x => x.Input.Password), @type = "password" })
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
                             </div>
                             <div class="col-6">
-                                @Html.TextBoxFor(x => x.Input.ConfirmPassword, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(x => x.Input.ConfirmPassword) })
+                                @Html.TextBoxFor(x => x.Input.ConfirmPassword, new { @class = "form-control", @placeholder = @Html.DisplayNameFor(x => x.Input.ConfirmPassword), @type = "password" })
                                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                             </div>
                         </div>

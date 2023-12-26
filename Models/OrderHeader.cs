@@ -15,7 +15,7 @@ namespace Models
         public ApplicationUser CreatedBy { get; set; }
 
         [Required]
-        public DateTime OrderDate { get; set; }
+        public DateTime? OrderDate { get; set; }
 
         [Required]
         public DateTime? ShippingDate { get; set; }

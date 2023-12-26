@@ -45,7 +45,7 @@
         }
 
         @Html.TextBoxFor(x => x.Input.Email, new { @class = "form-control mb-2", @placeholder = @Html.DisplayNameFor(x => x.Input.Email) })
-        @Html.TextBoxFor(x => x.Input.Password, new { @class = "form-control mb-2", @placeholder = @Html.DisplayNameFor(x => x.Input.Password) })
+        @Html.TextBoxFor(x => x.Input.Password, new { @class = "form-control mb-2", @placeholder = @Html.DisplayNameFor(x => x.Input.Password), @type = "password" })
 
         <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Log in</button>
         <a id="forgot-password" asp-page="./ForgotPassword" class="pb-2 text-info">Forgot your password?</a>

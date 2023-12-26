@@ -1,4 +1,5 @@
-﻿@model OrderVM
+﻿@using Utility
+@model OrderVM
 
 @{
     ViewData["Title"] = "Order";
@@ -81,14 +82,14 @@
                             <div class="row my-1">
                                 <div class="col-3">Order Date</div>
                                 <div class="col-9">
-                                    <input type="text" value="@Model.OrderHeader.OrderDate.ToShortDateString()" class="form-control" readonly />
+                                    <input type="text" value="@Model.OrderHeader.OrderDate?.ToShortDateString()" class="form-control" readonly />
                                 </div>
                             </div>
 
                             <div class="row my-1">
                                 <div class="col-3">Shipping Date</div>
                                 <div class="col-9">
-                                    <input type="text" value="@Model.OrderHeader.ShippingDate?.ToShortDateString()" class="form-control" readonly />
+                                    <input type="text" id="shipping-date" value="@Model.OrderHeader.ShippingDate?.ToShortDateString()" class="form-control" readonly />
                                 </div>
                             </div>
 
@@ -107,8 +108,7 @@
                             </div>
                             <div class="row my-1">
                                 <div class="col-9 offset-3">
-                                    <input type="submit" value="Update Order Details" class="btn btn-warning form-control"
-                                           formaction="/Order/UpdateOrderDetails" formmethod="post" />
+                                    <input type="submit" asp-action="UpdateOrderDetails" class="btn btn-warning form-control" value="Update Order Details" />
                                 </div>
                             </div>
 
@@ -151,18 +151,25 @@
 
                             <br />
 
-                            <input type="submit" value="Start Processing" class="btn btn-info form-control" />
-
-                            <input type="submit" value="Ship Order" class="btn btn-primary form-control" />
-
-
-                            <div class="pt-2">
-                                <button type="submit"
-                                        class="btn btn-danger form-control"
-                                        formmethod="post">
-                                    Cancel Order
-                                </button>
-                            </div>
+                            @{
+                                if (Model.OrderHeader.OrderStatus == WC.StatusApproved)
+                                {
+                                    <input type="submit" asp-action="StartProcessing" value="Start Processing" class="btn btn-info form-control" />
+                                }
+                                if (Model.OrderHeader.OrderStatus == WC.StatusInProcess)
+                                {
+                                    <input type="submit" asp-action="ShippOrder" value="Ship Order" class="btn btn-primary form-control" />
+                                }
+                                if (Model.OrderHeader.OrderStatus != WC.StatusRefunded
+                                    && Model.OrderHeader.OrderStatus != WC.StatusCancelled)
+                                {
+                                    <div class="pt-2">
+                                        <button type="submit" asp-action="CancelOrder" class="btn btn-danger form-control">
+                                            Cancel Order
+                                        </button>
+                                    </div>
+                                }
+                            } 
                         </div>
                     </div>
                 </div>
@@ -171,6 +178,16 @@
     </div>
 </form>
 
+
+
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            const date = document.getElementById('shipping-date');
+            if (date.value == '1/1/0001') {
+                date.value = "";
+            }
+        });
+    </script>
 }

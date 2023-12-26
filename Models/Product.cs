@@ -47,7 +47,7 @@ namespace Models
         // Not mapped properties
 
         [NotMapped]
-        [Range(1, 10000)]
+        [Range(1, 10000, ErrorMessage = "SqFt must be greater than 0.")]
         public int TempSqFt { get; set; }
     }
 }
