@@ -88,7 +88,7 @@
                             <div class="row my-1">
                                 <div class="col-3">Shipping Date</div>
                                 <div class="col-9">
-                                    <input type="text" value="@Model.OrderHeader.ShippingDate.ToShortDateString()" class="form-control" readonly />
+                                    <input type="text" value="@Model.OrderHeader.ShippingDate?.ToShortDateString()" class="form-control" readonly />
                                 </div>
                             </div>
 
