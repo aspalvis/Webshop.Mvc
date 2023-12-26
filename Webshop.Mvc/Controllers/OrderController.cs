@@ -26,18 +26,24 @@ namespace Webshop.Mvc.Controllers
             _orderHeaderRepository = orderHeaderRepository;
             _brainTreeGate = brainTreeGate;
         }
-        public IActionResult Index()
+        public IActionResult Index(string name = null, string email = null, string phone = null, string status = null)
         {
             OrderListVM = new OrderListVM()
             {
-                OrderHeaders = _orderHeaderRepository.GetAll(isTracking: false),
+                OrderHeaders = _orderHeaderRepository.GetAll(
+                    x => (string.IsNullOrEmpty(name) || x.FullName.ToLower().Contains(name.ToLower()))
+                      && (string.IsNullOrEmpty(email) || x.Email.ToLower().Contains(email.ToLower()))
+                      && (string.IsNullOrEmpty(phone) || x.PhoneNumber.ToLower().Contains(phone.ToLower()))
+                      && (string.IsNullOrEmpty(status) || x.OrderStatus == status),
+                    isTracking: false
+                ),
                 StatusList = WC.listStatus.ToList().Select(status => new SelectListItem
                 {
                     Text = status,
                     Value = status
                 })
             };
-            return View();
+            return View(OrderListVM);
         }
     }
 }

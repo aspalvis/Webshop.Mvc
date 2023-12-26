@@ -44,8 +44,6 @@
                         @if (User.IsInRole(WC.AdminRole))
                         {
                             <li class="nav-item dropdown">
-
-
                                     <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenu" data-toggle="dropdown">
                                         Content management
                                     </a>
@@ -56,7 +54,6 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
                                     </div>
-
                             </li>
                         }
                         
@@ -68,6 +65,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                                     <a class="dropdown-item" asp-area="" asp-controller="Inquiry" asp-action="Index">Inquiry</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
                                 </div>
                             </li>
                         }
