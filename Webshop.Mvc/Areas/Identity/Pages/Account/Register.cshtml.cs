@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Models;
+using Services;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,8 +23,8 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IUserFactoryService _userFactoryService;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -31,12 +32,13 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<RegisterModel> logger,
+            IUserFactoryService userFactoryService,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _logger = logger;
+            _userFactoryService = userFactoryService;
             _emailSender = emailSender;
         }
 
@@ -76,12 +78,6 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!await _roleManager.RoleExistsAsync(WC.AdminRole))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(WC.AdminRole));
-                await _roleManager.CreateAsync(new IdentityRole(WC.CustomerRole));
-            }
-
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -100,18 +96,12 @@ namespace Webshop.Mvc.Areas.Identity.Pages.Account
                     FullName = Input.FullName
                 };
 
-                IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
+                IdentityResult result = User.IsInRole(WC.AdminRole)
+                    ? await _userFactoryService.CreateAdminAsync(user, Input.Password)
+                    : await _userFactoryService.CreateAsync(user, Input.Password, WC.CustomerRole);
 
                 if (result.Succeeded)
                 {
-                    if (User.IsInRole(WC.AdminRole))
-                    {
-                        await _userManager.AddToRoleAsync(user, WC.AdminRole);
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, WC.CustomerRole);
-                    }
 
                     _logger.LogInformation("User created a new account with password.");
 

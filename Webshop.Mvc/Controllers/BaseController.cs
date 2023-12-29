@@ -23,16 +23,7 @@ namespace Webshop.Mvc.Controllers
             SetActionErrorMessage();
             return View(viewName, model);
         }
-        public ViewResult ViewWithSuccess(string viewName = null, object model = null)
-        {
-            SetActionSuccessMessage();
-            return View(viewName, model);
-        }
-        public RedirectToActionResult RedirectToActionErrorError(string actionName = null, string controllerName = null, object routeValues = null)
-        {
-            SetActionErrorMessage();
-            return RedirectToAction(actionName, controllerName, routeValues);
-        }
+
         public RedirectToActionResult RedirectToActionSuccess(string actionName = null, string controllerName = null, object routeValues = null)
         {
             SetActionSuccessMessage();
