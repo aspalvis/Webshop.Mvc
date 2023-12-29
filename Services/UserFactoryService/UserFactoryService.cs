@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Services
+namespace Services.UserFactoryService
 {
     public class UserFactoryService : IUserFactoryService
     {

@@ -2,7 +2,7 @@
 using Models;
 using System.Threading.Tasks;
 
-namespace Services
+namespace Services.UserFactoryService
 {
 
     public interface IUserFactoryService
