@@ -2,6 +2,9 @@
 using DataAccess.Repository.IRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Services.OrderService;
+using Services.UserFactoryService;
+using Utility.BrainTree;
 
 namespace Webshop.Mvc.Extensions
 {
@@ -18,6 +21,11 @@ namespace Webshop.Mvc.Extensions
             services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
             services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
         }
+        public static void AddDomainServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserFactoryService, UserFactoryService>();
+            services.AddScoped<IOrderService, OrderService>();
+        }
 
         public static void AddFacebookAuth(this IServiceCollection services, IConfiguration configuration)
         {
@@ -26,6 +34,10 @@ namespace Webshop.Mvc.Extensions
                 options.AppId = configuration["Facebook:AppId"];
                 options.AppSecret = configuration["Facebook:AppSecret"];
             });
+        }
+        public static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<BrainTreeSettings>(configuration.GetSection("BrainTree"));
         }
     }
 }

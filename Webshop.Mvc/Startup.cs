@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Services.OrderService;
-using Services.UserFactoryService;
 using System;
 using Utility;
 using Utility.BrainTree;
@@ -47,15 +45,13 @@ namespace Webshop.Mvc
                 Options.Cookie.IsEssential = true;
             });
 
-            services.Configure<BrainTreeSettings>(Configuration.GetSection("BrainTree"));
-
-            services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+            services.AddConfigurations(Configuration);
 
             services.AddRespositories();
 
-            services.AddScoped<IUserFactoryService, UserFactoryService>();
+            services.AddDomainServices();
 
-            services.AddScoped<IOrderService, OrderService>();
+            services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
             services.AddFacebookAuth(Configuration);
 

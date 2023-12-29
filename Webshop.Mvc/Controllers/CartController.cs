@@ -58,13 +58,13 @@ namespace Webshop.Mvc.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<ShoppingCart> items = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
+            IEnumerable<ShoppingCart> shoppingCart = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) ?? new List<ShoppingCart>();
 
-            var productIds = items.Select(u => u.ProductId).ToList();
+            var productIds = shoppingCart.Select(u => u.ProductId).ToList();
 
             var prodList = _productRepository.GetAll(x => productIds.Contains(x.Id), isTracking: false);
 
-            foreach (var cart in items)
+            foreach (var cart in shoppingCart)
             {
                 var productTemp = prodList.FirstOrDefault(x => x.Id.Equals(cart.ProductId));
                 if (productTemp != null)
