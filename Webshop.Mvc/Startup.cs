@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Services.OrderService;
 using Services.UserFactoryService;
 using System;
 using Utility;
@@ -54,6 +55,8 @@ namespace Webshop.Mvc
 
             services.AddScoped<IUserFactoryService, UserFactoryService>();
 
+            services.AddScoped<IOrderService, OrderService>();
+
             services.AddFacebookAuth(Configuration);
 
             services.AddControllersWithViews();
@@ -65,9 +68,9 @@ namespace Webshop.Mvc
             {
                 app.UseDeveloperExceptionPage();
 
-                app.RecreateDatabase(serviceProvider).Wait();
+                //app.RecreateDatabase(serviceProvider).Wait();
 
-                app.ApplySeeds(serviceProvider).Wait();
+                //app.ApplySeeds(serviceProvider).Wait();
             }
             else
             {

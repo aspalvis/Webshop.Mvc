@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Models;
+using Services.UserFactoryService;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
