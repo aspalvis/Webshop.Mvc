@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using Utility;
 using Utility.BrainTree;
 using Webshop.Mvc.Extensions;
@@ -47,7 +48,7 @@ namespace Webshop.Mvc
 
             services.AddConfigurations(Configuration);
 
-            services.AddRespositories();
+            services.AddRepositories();
 
             services.AddDomainServices();
 
@@ -64,9 +65,11 @@ namespace Webshop.Mvc
             {
                 app.UseDeveloperExceptionPage();
 
-                //app.RecreateDatabase(serviceProvider).Wait();
-
-                //app.ApplySeeds(serviceProvider).Wait();
+                if (!DatabaseExists(serviceProvider) || !DatabaseHasUsers(serviceProvider))
+                {
+                    app.RecreateDatabase(serviceProvider).Wait();
+                    app.ApplySeeds(serviceProvider).Wait();
+                }
             }
             else
             {
@@ -93,6 +96,23 @@ namespace Webshop.Mvc
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private bool DatabaseHasUsers(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                return userManager.Users.Any();
+            }
+        }
+        private bool DatabaseExists(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                return dbContext.Database.CanConnect();
+            }
         }
     }
 }

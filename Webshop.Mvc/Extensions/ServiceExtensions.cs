@@ -11,7 +11,7 @@ namespace Webshop.Mvc.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void AddRespositories(this IServiceCollection services)
+        public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
