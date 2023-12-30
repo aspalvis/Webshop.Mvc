@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services.OrderService;
 using Services.UserFactoryService;
+using Utility;
 using Utility.BrainTree;
 
 namespace Webshop.Mvc.Extensions
@@ -38,6 +39,7 @@ namespace Webshop.Mvc.Extensions
         public static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<BrainTreeSettings>(configuration.GetSection("BrainTree"));
+            services.Configure<MailJetSettings>(configuration.GetSection("MailJet"));
         }
     }
 }
