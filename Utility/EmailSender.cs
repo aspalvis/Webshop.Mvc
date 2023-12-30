@@ -33,7 +33,7 @@ namespace Utility
             };
 
             var transactionEmail = new TransactionalEmailBuilder()
-                .WithFrom(new SendContact("spalvej15@gmail.com", "WebShop.MVC"))
+                .WithFrom(new SendContact(_mailJetSettings.SenderEmail, _mailJetSettings.SenderName))
                 .WithSubject(subject)
                 .WithHtmlPart(body)
                 .WithTo(new SendContact(email))
